@@ -3,6 +3,7 @@ import { db } from "../../utils/db";
 import { adminSearchAbleFields } from "./admin.constants";
 
 const getAllAdmin = async (query: any) => {
+  const { searchTerm, ...remainsData } = query;
   const andConditions: Prisma.AdminWhereInput[] = [];
 
   if (query?.searchTerm) {
@@ -11,6 +12,16 @@ const getAllAdmin = async (query: any) => {
         [field]: {
           contains: query?.searchTerm,
           mode: "insensitive",
+        },
+      })),
+    });
+  }
+
+  if (Object.keys(remainsData).length > 0) {
+    andConditions.push({
+      AND: Object.keys(remainsData).map((key: string) => ({
+        [key]: {
+          equals: remainsData[key],
         },
       })),
     });

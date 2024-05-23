@@ -8,7 +8,8 @@ import { adminFilterAbleFields } from "./admin.constants";
 const getAllAdmin = async (req: Request, res: Response) => {
   try {
     const queryData = pick(req.query, adminFilterAbleFields);
-    const result = await AdminServices.getAllAdmin(queryData);
+    const options = pick(req.query, ["sortBy", "limit", "page", "orderBy"]);
+    const result = await AdminServices.getAllAdmin(queryData, options);
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.CREATED,
